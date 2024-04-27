@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <title>Student, Counselor, and Visitor Cards</title>
+</head>
+<body>
+  <div class="container mt-4">
+    <h2>Students</h2>
+    <div id="studentsContainer" class="card-deck">
+      <!-- Student Cards will be added here dynamically -->
+    </div>
+
+    <h2 class="mt-4">Counselors</h2>
+    <div id="counselorsContainer" class="card-deck">
+      <!-- Counselor Cards will be added here dynamically -->
+    </div>
+
+    <h2 class="mt-4">Visitors</h2>
+    <div id="visitorsContainer" class="card-deck">
+      <!-- Visitor Cards will be added here dynamically -->
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script>
+    // Function to fetch data from the server and generate cards
+    async function fetchDataAndDisplay(endpoint, containerId) {
+      const response = await fetch(`http://localhost:3500${endpoint}`);
+      const data = await response.json();
+  
+      const cardContainer = document.getElementById(containerId);
+      cardContainer.innerHTML = ''; // Clear the container before adding new cards
+  
+      data.forEach(item => {
+        const card = document.createElement('div');
+        card.classList.add('card', 'mb-4');
+  
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+  
+        const cardTitle = document.createElement('h5');
+        cardTitle.classList.add('card-title');
+        cardTitle.textContent = item.name;
+  
+        const cardText = document.createElement('p');
+        cardText.classList.add('card-text');
+        cardText.textContent = `ID: ${item.id}`;
+  
+        cardBody.appendChild(cardTitle);
+        cardBody.appendChild(cardText);
+  
+        card.appendChild(cardBody);
+        cardContainer.appendChild(card);
+      });
+    }
+  
+    // Fetch and display data for each category
+    fetchDataAndDisplay('/students', 'studentsContainer');
+    fetchDataAndDisplay('/counselors', 'counselorsContainer');
+    fetchDataAndDisplay('/visitors', 'visitorsContainer');
+  </script>
+</body>
+</html>
